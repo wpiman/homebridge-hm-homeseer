@@ -121,7 +121,52 @@ Thermostats in HS4 are typically split across multiple devices (mode, temperatur
 3. Nearby ref search (devices within +/-20 refs in either direction)
 4. Same-location matching (devices with matching suffix names in the same HS4 location)
 
+### Manual override of control values
+
+The plugin supports overriding control values for certain accessories. This allows custom-defined devices, or devices with non-standard on/off values (such as ISY), to be supported.
+
+It is recommended to let the plugin discover accessories automatically, and only use control value overrides when automatic detection fails.
+
+Control values are defined in `homeseer-ng-devices.json`, located in the root directory of Homebridge.
+
+For each device, find its JSON definition and add a `controlValues` object. For example, change:
+
+```json
+{
+  "ref": 2753,
+  "type": "switch"
+}
+```
+
+to:
+
+```json
+{
+  "ref": 2753,
+  "type": "switch",
+  "controlValues": { "offValue": 0, "onValue": 100 }
+}
+```
+
+The allowed override values depend on the device type:
+
+| Device type(s) | Allowed override values |
+|---|---|
+| `Fan` | `onValue`, `offValue`, `hasDim` |
+| `Garage` | `openValue`, `closeValue`, `stopValue` |
+| `lightbulb`, `lightbulb-nodim`, `outlet`, `irrigation` | `onValue`, `offValue` |
+| `lock` | `lockValue`, `unlockValue` |
+| `security` | `armStayValue`, `armAwayValue`, `armNightValue`, `disarmValue` |
+| `valve` | `openValue`, `closeValue` |
+
 ## Changelog
+
+## 1.0.26
+- Documented `controlValues` override syntax and allowed keys per device type in README
+- Added changelog
+
+### 1.0.25
+- Added support for Add 8 new HomeKit accessory types: windowcovering, door, window, outlet, programmableswitch, irrigation, occupancy sensor, CO2 sensor, air quality sensor
 
 ### 1.0.24
 - Save and load manually defined control values
